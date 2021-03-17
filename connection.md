@@ -2,15 +2,15 @@
 
 ### HttpConnection
 
-Physical HTTP communication is encapsulated by `HttpConnection` interface. On `send()`, **Jodd HTTP** will `open()` connection if not already opened. Connections are created by the connection provider: `HttpConnectionProvider`. The default connection provider is socket-based and it always returns a new `SocketHttpConnection` instance - that simply wraps a `Socket` and opens it.
+Socket HTTP communication is encapsulated by `HttpConnection` interface. On `send()`, **Jodd HTTP** will `open()` connection if not already opened. HTTP connections are created by the connection provider instance: `HttpConnectionProvider`. The default connection provider is socket-based and it always returns a new `SocketHttpConnection` instance - that simply wraps a `Socket` and opens it.
 
 It is common to use custom `HttpConnectionProvider`, based on default implementation. For example, you may extend the `SocketHttpConnectionProvider` and override `createSocket()` method to return sockets from some pool, or sockets with a different timeout.
 
 Alternatively, you may even provide an instance of `HttpConnection` directly, without any provider.
 
-#### Socket
+### Working with Sockets
 
-As said, default communication goes through the plain `Socket`. Since it is a common need to tweak socket behavior before sending data, here are two examples of how you can do it with **Jodd TTP**.
+As said, the default communication goes through the plain `Socket`. Since it is a common need to tweak socket behavior before sending data, here are two ways of how you can do it with **Jodd HTTP**.
 
 #### SocketHttpConnection
 
@@ -19,11 +19,14 @@ Since we know the default type of `HttpConnection`, we can simply get the instan
 ```java
 HttpRequest request = HttpRequest.get()...;
 request.open();
+
 SocketHttpConnection httpConnection =
     (SocketHttpConnection) request.httpConnection();
 Socket socket = httpConnection.getSocket();
 socket.setSoTimeout(1000);
+
 ...
+
 HttpResponse response = request.send();
 ```
 
@@ -43,7 +46,17 @@ public class MyConnectionProvider extends SocketHttpConnectionProvider {
 }
 ```
 
-Now you can use this provider directly in `open()` method:
+The custom provider is set by `withConnectionProvider()`:
+
+```java
+HttpResponse response = HttpRequest
+    .get()
+    .withConnectionProvider(new MyConnectionProvider())
+    ...
+    send();
+```
+
+Alternatively, you can explicitly open a connection with the `open()` method:
 
 ```java
 HttpConnectionProvider connectionProvider = new MyConnectionProvider();
@@ -52,11 +65,13 @@ HttpRequest request = HttpRequest.get()...;
 HttpResponse response = request.open(connectionProvider).send();
 ```
 
-If you want your connection provider to be the default one for all your communication, just assign it to the `JoddHttp.httpConnectionProvider` and you can avoid the explicit `open()` usage.
+{% hint style="danger" %}
+Once when a connection is open by `open()` method, you can not alter it via the **Jodd HTTP** interface. For example, setting the timeouts _after_ the open will have no effect.
+{% endhint %}
 
 ### Keep-Alive
 
-By default, all connections are marked as _closed_, to keep servers happy. **Jodd HTTP** allows usage of permanent connections through 'keep-alive' mode. The `HttpConnection` is opened on the first request and then re-used in communication session; the socked is not opened again if not needed and therefore it is reused for several requests.
+By default, all connections are marked as _closed_, to keep servers happy. **Jodd HTTP** allows usage of permanent connections through the keep-alive mode. The `HttpConnection` is opened on the first request and then re-used in communication session; the socked is not opened again if not needed and therefore it is reused for several requests.
 
 There are several ways how to do this. The easiest way is the following:
 

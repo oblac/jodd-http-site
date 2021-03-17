@@ -9,7 +9,7 @@ HttpResponse response = httpRequest.send();
 System.out.println(response);
 ```
 
-All **HTTP** classes offer a fluent interface, too; so you can write:
+All **HTTP** classes offer a _fluent interface_, too; so you can write:
 
 ```java
 HttpResponse response = HttpRequest.get("http://jodd.org").send();
@@ -65,7 +65,7 @@ HttpResponse response = HttpRequest
 You can use `query()` for each parameter, or pass many arguments in one call \(varargs\). You can also provide `Map<String, String>` as a parameter too.
 
 {% hint style="info" %}
-Query parameters \(as well as headers and form parameters\) can be duplicated. Therefore, they are stored in an array internally. Use method `removeQuery` to remove some parameters, or overloaded methods to replace parameter.
+Query parameters \(as well as headers and form parameters\) can be duplicated. Therefore, they are stored in an array internally. Use method `removeQuery` to remove some parameters or overloaded methods to replace a parameter.
 {% endhint %}
 
 Finally, you can reach the internal query map, that actually holds all parameters:
@@ -138,13 +138,9 @@ HttpResponse response = HttpRequest
     .send();
 ```
 
-Before the upload starts, `HttpProgressListener` calculates the `callbackSize`
+Before the upload starts, `HttpProgressListener` calculates the `callbackSize` - the size of the chunk in bytes that will be transferred. By default, this size equals `1%` of the total size. Moreover, it is never less than `512` bytes.
 
-* the size of chunk in bytes that will be transfered. By default, this size
-
-  equals to 1% of total size. Moreover, it is never less then 512 bytes.
-
-`HttpProgressListener` contains the inner field `size` with the total size of the request. Note that this is the size of the whole request, not only the files! This is the actual number of bytes that is going to be sent, and it is always a bit larger than file size \(due to protocol overhead\).
+`HttpProgressListener` contains the inner field `size` with the total size of the request. Note that this is the size of the whole request, not only the files! This is the actual number of bytes that are going to be sent, and it is always a bit larger than file size \(due to protocol overhead\).
 
 ### Headers
 
@@ -188,7 +184,7 @@ Setting the body discards all previously set `form()` parameters.
 
 ### Charsets and Encodings
 
-By default, query and form parameters are encoded in UTF-8. This can be changed globally in `JoddHttp`, or per instance:
+By default, query and form parameters are encoded in UTF-8.
 
 ```java
     HttpResponse response = HttpRequest
@@ -200,7 +196,7 @@ By default, query and form parameters are encoded in UTF-8. This can be changed 
 
 You can set form encoding similarly. Moreover, form posting detects the value of **charset** in the "Content-Type" header, and if present, it will be used.
 
-With received content, `body()` method always returns the **raw** string \(encoded as ISO-8859-1\). To get the string in usable form, use method `bodyText()`. This method uses a provided **charset** from "Content-Type" header and encodes the body string.
+With received content, `body()` method always returns the **raw** string \(encoded as ISO-8859-1\). To get the string in usable form, use the method `bodyText()`. This method uses a provided **charset** from the "Content-Type" header and encodes the body string.
 
 ### Following redirection
 

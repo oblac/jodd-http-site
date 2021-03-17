@@ -1,3 +1,7 @@
+---
+description: Everything you wanted to know.
+---
+
 # FAQ
 
 ### How to save a binary file?
