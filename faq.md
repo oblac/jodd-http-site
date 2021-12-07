@@ -49,9 +49,14 @@ HttpResponse response =
 
 `HttpRequest` represents just a single request; clean and simple.
 
-`HttpBrowser` emulates browsing of a website \(i.e. set of URLs\) like a browser. Besides sending requests, it also stores and resends cookies, maintaining the current user session. Moreover, the `HttpBrowser` uses new request on redirection following, allows common request headers for all the requests etc.
+`HttpBrowser` emulates browsing of a website (i.e. set of URLs) like a browser. Besides sending requests, it also stores and resends cookies, maintaining the current user session. Moreover, the `HttpBrowser` uses new request on redirection following, allows common request headers for all the requests etc.
 
-### Server chose TLSv1.2, but that protocol version is not enabled?
+### Server choses TLSv1.2, but that protocol version is not enabled?
 
 Just add the following property `-Dhttps.protocols=TLSv1.1,TLSv1.2` which configures the JVM to specify which TLS protocol version should be used during HTTPS connections.
 
+Since 8u292, JDK 11.0.11, JDK16+ Java requires use of TLS v1.2 or v1.3.
+
+### SOCKS5: proxy returned 1
+
+This is a common error when using Socks5 behind some VPNs.
