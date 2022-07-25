@@ -18,14 +18,14 @@ description: Tips on how to install Jodd HTTP library in your app
 {% endtab %}
 
 {% tab title="Gradle" %}
-```text
-implementation 'org.jodd:jodd-http.x.x'
+```
+implementation 'org.jodd:jodd-http:x.x.x'
 ```
 {% endtab %}
 
 {% tab title="Gradl.kt" %}
 ```kotlin
-implementation("org.jodd:jodd-http.x.x")
+implementation("org.jodd:jodd-http:x.x.x")
 ```
 {% endtab %}
 
@@ -63,4 +63,3 @@ That is all!
 {% hint style="warning" %}
 Snapshots are released manually. Feel free to contact me if you need a new SNAPSHOT release sooner.
 {% endhint %}
-
